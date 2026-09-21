@@ -146,4 +146,4 @@ document.getElementById('instagramLink').href=C.instagram||'#';
 document.getElementById('whatsappLink').href=C.whatsappNumber?'https://wa.me/'+C.whatsappNumber:'#';
 window.addEventListener('hashchange',router);
 router();
-})();
+}
