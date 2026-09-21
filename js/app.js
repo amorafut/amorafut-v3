@@ -1,149 +1,23 @@
-(function(){
-const C=window.AMORA_CONFIG||{};
-const P=window.PRODUCTS||[];
-let cart=JSON.parse(localStorage.getItem('amora_cart')||'[]');
-let selectedSize='M';
-const app=document.getElementById('app');
-const money=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-const find=id=>P.find(p=>p.id===id);
-
-function save(){localStorage.setItem('amora_cart',JSON.stringify(cart));updateCartCount();renderCart();}
-function updateCartCount(){document.getElementById('cartCount').textContent=cart.reduce((s,i)=>s+i.qty,0)}
-function path(){return location.hash.replace(/^#/,'')||'home'}
-function nav(){document.querySelectorAll('[data-route]').forEach(a=>a.onclick=e=>{e.preventDefault();location.hash=a.getAttribute('href').slice(1)})}
-
-function home(){
-  const heroProduct=P[0];
-  const heroImage=heroProduct?.images?.[0]||'';
-  app.innerHTML=`
-  <div class="home-v4">
-    <section class="homeHero container">
-      <div class="heroV4Copy">
-        <span class="eyebrow">AMORA FUT STREETWEAR</span>
-        <h1>Seu time.<br><em>Seu estilo.</em></h1>
-        <p>Camisas de futebol selecionadas para quem transforma paixão, identidade e estilo em uma só camisa.</p>
-        <div class="heroActions">
-          <button class="primary" onclick="location.hash='catalogo'">VER CATÁLOGO</button>
-          <button class="heroLink" onclick="document.getElementById('homeDestaques').scrollIntoView({behavior:'smooth'})">EXPLORAR DESTAQUES ↓</button>
-        </div>
-        <div class="heroTrust">
-          <span>✓ Envio para todo o Brasil</span>
-          <span>✓ 5% OFF no Pix</span>
-        </div>
-      </div>
-      <div class="heroV4Image">
-        ${heroImage?`<img src="${heroImage}" alt="${heroProduct?.name||'Camisa de futebol'}">`:''}
-        <div class="heroImageTag">LANÇAMENTO</div>
-      </div>
-    </section>
-
-    <section class="quickCategories container">
-      <div class="sectionIntro center">
-        <span class="eyebrow">ENCONTRE SUA CAMISA</span>
-        <h2>Escolha por categoria</h2>
-      </div>
-      <div class="categoryGrid">
-        <button class="categoryTile" onclick="location.hash='catalogo'"><span>BR</span><b>Brasileiras</b><small>Clubes do Brasil</small></button>
-        <button class="categoryTile" onclick="location.hash='catalogo'"><span>INT</span><b>Internacionais</b><small>Grandes clubes</small></button>
-        <button class="categoryTile" onclick="location.hash='catalogo'"><span>SEL</span><b>Seleções</b><small>Paixão mundial</small></button>
-        <button class="categoryTile" onclick="location.hash='catalogo'"><span>JOG</span><b>Versão Jogador</b><small>Performance & estilo</small></button>
-        <button class="categoryTile" onclick="location.hash='catalogo'"><span>TOR</span><b>Versão Torcedor</b><small>Para vestir a paixão</small></button>
-        <button class="categoryTile dark" onclick="location.hash='catalogo'"><span>SALE</span><b>Ofertas</b><small>Confira as oportunidades</small></button>
-      </div>
-    </section>
-
-    <section id="homeDestaques" class="homeProducts container">
-      <div class="sectionTitle">
-        <div><span class="eyebrow">CURADORIA AMORA FUT</span><h2>Mais vendidos</h2><p>Produtos em destaque na loja.</p></div>
-        <a class="secondary" href="#catalogo">Ver catálogo</a>
-      </div>
-      <div class="grid">${P.slice(0,4).map(card).join('') || '<div class="empty">Em breve novos produtos.</div>'}</div>
-    </section>
-
-    <section class="promoBand container">
-      <div>
-        <span class="eyebrow">OFERTA PROGRESSIVA</span>
-        <h2>Leve mais.<br><em>Economize mais.</em></h2>
-        <p>Monte seu kit de camisas e aproveite nossos descontos progressivos.</p>
-      </div>
-      <div class="promoDeals">
-        <div><strong>2 CAMISAS</strong><b>R$ 10 OFF</b><small>em cada camisa</small></div>
-        <div><strong>3 CAMISAS</strong><b>R$ 15 OFF</b><small>em cada camisa</small></div>
-      </div>
-    </section>
-
-    <section class="homeProducts container">
-      <div class="sectionTitle">
-        <div><span class="eyebrow">NOVIDADES</span><h2>Lançamentos</h2><p>Chegaram para completar sua coleção.</p></div>
-        <a class="secondary" href="#catalogo">Ver todos</a>
-      </div>
-      <div class="grid">${P.slice(0,4).map(card).join('') || '<div class="empty">Novidades em breve.</div>'}</div>
-    </section>
-
-    <section class="benefitsV4 container">
-      <div class="sectionIntro center"><span class="eyebrow">POR QUE AMORA FUT?</span><h2>Compra simples. Estilo de verdade.</h2></div>
-      <div class="benefitGridV4">
-        <article><span>01</span><h3>Envio nacional</h3><p>Enviamos para todo o Brasil.</p></article>
-        <article><span>02</span><h3>Desconto no Pix</h3><p>5% de desconto no pagamento via Pix.</p></article>
-        <article><span>03</span><h3>Atendimento direto</h3><p>Fale com a Amora Fut pelo WhatsApp.</p></article>
-        <article><span>04</span><h3>Catálogo selecionado</h3><p>Camisas escolhidas para futebol e streetwear.</p></article>
-      </div>
-    </section>
-
-    <section class="instagramV4 container">
-      <div><span class="eyebrow">SIGA A AMORA FUT</span><h2>@amorafutcamisas</h2><p>Acompanhe lançamentos, novidades e campanhas da loja.</p></div>
-      <a class="primary" href="${C.instagram||'#'}" target="_blank" rel="noopener">ABRIR INSTAGRAM</a>
-    </section>
-
-    <section class="aboutV4 container" id="sobre">
-      <div><span class="eyebrow">SOBRE A MARCA</span><h2>Futebol como estilo.</h2><p>A Amora Fut Streetwear une cultura do futebol e estética premium em uma experiência de compra visual, simples e direta. Nosso catálogo pode receber clubes, seleções, versões jogador e torcedor, além de lançamentos e promoções.</p><button class="secondary" onclick="location.hash='sobre'">CONHEÇA A AMORA FUT</button></div>
-    </section>
-  </div>`;
-}
-
-function card(p){
-  return `<article class="card"><a href="#produto/${p.id}"><div class="cardImg"><img src="${p.images[0]}" alt="${p.name}">${p.badge?`<span class="badge">${p.badge}</span>`:''}</div><div class="cardBody"><h3>${p.name}</h3><div class="meta">${p.version} • ${p.category}</div><div class="price">${money(p.price)}</div><div class="pix">${money(p.price*(1-C.pixDiscount))} no Pix</div></div></a></article>`
-}
-
-function catalog(){
-  app.innerHTML=`<div class="container"><div class="sectionTitle"><div><h2>Catálogo</h2><p>Encontre sua próxima camisa.</p></div><input id="search" class="search" placeholder="Buscar camisa..."></div><div class="filters"><button class="filter active" data-filter="Todos">Todos</button><button class="filter" data-filter="Brasileiros">Brasileiros</button><button class="filter" data-filter="Internacionais">Internacionais</button><button class="filter" data-filter="Seleções">Seleções</button></div><div id="productGrid" class="grid">${P.map(card).join('')}</div></div>`;
-  let f='Todos';
-  const render=()=>{const q=(document.getElementById('search').value||'').toLowerCase();document.getElementById('productGrid').innerHTML=P.filter(p=>(f==='Todos'||p.category===f)&&p.name.toLowerCase().includes(q)).map(card).join('')||'<div class="empty">Nenhum produto encontrado.</div>'};
-  document.querySelectorAll('.filter').forEach(b=>b.onclick=()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');f=b.dataset.filter;render()});
-  document.getElementById('search').oninput=render
-}
-
-function product(id){
-  const p=find(id);if(!p){location.hash='catalogo';return}selectedSize=p.sizes[0];
-  app.innerHTML=`<div class="container"><div class="product"><div class="gallery"><div class="thumbs" id="thumbs">${p.images.map((im,i)=>`<button class="thumb ${i===0?'active':''}" data-i="${i}"><img src="${im}" alt="Detalhe ${i+1}"></button>`).join('')}</div><div class="mainImg"><img id="mainProductImg" src="${p.images[0]}" alt="${p.name}"></div></div><div class="details"><span class="tag">${p.badge||'DESTAQUE'} • VERSÃO ${p.version.toUpperCase()}</span><h1>${p.name}</h1><p class="subtitle">${p.description}</p><div class="bigPrice">${money(p.price)}</div><div class="pixPrice">ou ${money(p.price*(1-C.pixDiscount))} no Pix</div><div class="divider"></div><div class="label">Tamanho</div><div class="sizes">${p.sizes.map(s=>`<button class="size ${s===selectedSize?'active':''}" data-size="${s}">${s}</button>`).join('')}</div><div class="buyRow"><input id="qty" class="qty" type="number" min="1" max="10" value="1"><button class="primary" id="add">ADICIONAR AO CARRINHO</button></div><button class="secondary full" id="buyNow">COMPRAR AGORA</button><div class="benefits"><div class="benefit"><b>🚚 Envio nacional</b><br>Enviamos para todo o Brasil.</div><div class="benefit"><b>💳 Pix</b><br>5% de desconto no Pix.</div><div class="benefit"><b>📏 Tamanhos</b><br>${p.sizes.join(' • ')}</div><div class="benefit"><b>⚽ Versão ${p.version}</b><br>Detalhes apresentados nas fotos reais.</div></div></div></div><div class="detailSections"><section class="panel"><h2>Detalhes da camisa</h2><p class="notice">${p.description}</p><p class="notice">A aparência, cores e elementos apresentados nesta página são baseados nas fotos fornecidas para o produto.</p></section><section class="panel"><h2>Especificações</h2>${p.specs.map(s=>`<div class="spec"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}</section></div></div>`;
-  document.querySelectorAll('.thumb').forEach(b=>b.onclick=()=>{document.getElementById('mainProductImg').src=p.images[b.dataset.i];document.querySelectorAll('.thumb').forEach(x=>x.classList.remove('active'));b.classList.add('active')});
-  document.querySelectorAll('.size').forEach(b=>b.onclick=()=>{document.querySelectorAll('.size').forEach(x=>x.classList.remove('active'));b.classList.add('active');selectedSize=b.dataset.size});
-  document.getElementById('add').onclick=()=>add(p.id,selectedSize,parseInt(document.getElementById('qty').value||1));
-  document.getElementById('buyNow').onclick=()=>{add(p.id,selectedSize,parseInt(document.getElementById('qty').value||1),false);location.hash='checkout';}
-}
-
-function add(id,size,qty,open=true){qty=Math.max(1,Math.min(10,qty));const p=find(id);const key=id+'_'+size;const item=cart.find(x=>x.key===key);if(item)item.qty+=qty;else cart.push({key,id,size,qty});save();if(open)openCart()}
-function renderCart(){const box=document.getElementById('cartItems'),empty=document.getElementById('cartEmpty');if(!box)return;if(!cart.length){box.innerHTML='';empty.style.display='block'}else{empty.style.display='none';box.innerHTML=cart.map(i=>{const p=find(i.id);return `<div class="cartItem"><img src="${p.images[0]}" alt=""><div><h4>${p.name}</h4><p>Tamanho ${i.size} • ${i.qty} un.</p><p>${money(p.price*i.qty)}</p></div><button class="remove" data-key="${i.key}">Remover</button></div>`}).join('');box.querySelectorAll('.remove').forEach(b=>b.onclick=()=>{cart=cart.filter(x=>x.key!==b.dataset.key);save()})}const sub=cart.reduce((s,i)=>s+find(i.id).price*i.qty,0);document.getElementById('subtotal').textContent=money(sub);document.getElementById('pixTotal').textContent=money(sub*(1-C.pixDiscount));document.getElementById('checkoutBtn').disabled=!cart.length}
-function openCart(){document.getElementById('cartDrawer').classList.add('open');renderCart()}
-function closeCart(){document.getElementById('cartDrawer').classList.remove('open')}
-
-function checkout(){
-  if(!cart.length){openCart();return}
-  const sub=cart.reduce((s,i)=>s+find(i.id).price*i.qty,0);
-  app.innerHTML=`<div class="container checkout"><div class="sectionTitle"><div><h2>Finalizar pedido</h2><p>Preencha seus dados para gerar o pedido.</p></div></div><div class="checkoutGrid"><section class="formPanel"><h1>Seus dados</h1><div class="field"><label>Nome completo</label><input id="name" required></div><div class="field"><label>WhatsApp</label><input id="phone" placeholder="(85) 99999-9999"></div><div class="field"><label>E-mail</label><input id="email" type="email"></div><div class="two"><div class="field"><label>CEP</label><input id="cep"></div><div class="field"><label>Cidade / UF</label><input id="city"></div></div><div class="field"><label>Endereço e número</label><input id="address"></div><div class="field"><label>Forma de pagamento</label><select id="payment"><option>Pix — 5% de desconto</option><option>Cartão de crédito</option><option>Pagamento a combinar</option></select></div><div class="payment">Nesta versão, o checkout gera o pedido e encaminha os dados para o WhatsApp da loja. Para cobrança automática, conecte um gateway de pagamento e um backend seguro.</div><button class="primary full" id="finish">GERAR PEDIDO</button></section><aside class="summaryPanel"><h2>Resumo</h2>${cart.map(i=>{const p=find(i.id);return `<div class="summaryItem"><span>${p.name}<br><small>${i.size} × ${i.qty}</small></span><b>${money(p.price*i.qty)}</b></div>`}).join('')}<div class="summaryTotal"><span>Subtotal</span><span>${money(sub)}</span></div><div class="pixPrice">No Pix: ${money(sub*(1-C.pixDiscount))}</div></aside></div></div>`;
-  document.getElementById('finish').onclick=()=>finish(sub)
-}
-function finish(sub){const name=document.getElementById('name').value.trim();if(!name){alert('Informe seu nome.');return}const lines=cart.map(i=>{const p=find(i.id);return `• ${p.name} | tam. ${i.size} | qtd. ${i.qty} | ${money(p.price*i.qty)}`}).join('\n');const pay=document.getElementById('payment').value;const msg=`Olá, Amora Fut! Quero finalizar um pedido.\n\nCliente: ${name}\nWhatsApp: ${document.getElementById('phone').value}\nE-mail: ${document.getElementById('email').value}\nEndereço: ${document.getElementById('address').value}\nCEP: ${document.getElementById('cep').value}\nCidade/UF: ${document.getElementById('city').value}\nPagamento: ${pay}\n\nProdutos:\n${lines}\n\nSubtotal: ${money(sub)}${pay.startsWith('Pix')?'\nTotal Pix: '+money(sub*(1-C.pixDiscount)):''}`;const n=(C.whatsappNumber||'').replace(/\D/g,'');if(!n){alert('Configure o número do WhatsApp em js/config.js antes de finalizar o pedido.');return}window.open('https://wa.me/'+n+'?text='+encodeURIComponent(msg),'_blank')}
-function about(){app.innerHTML='<div class="container"><section class="about"><div class="eyebrow">AMORA FUT STREETWEAR</div><h1>Futebol como estilo.</h1><p>A Amora Fut foi pensada para unir paixão por camisas de futebol, estética streetwear e uma experiência de compra direta. Nosso catálogo pode receber clubes, seleções, versões jogador e torcedor, além de lançamentos e promoções.</p><p><b>Envio para todo o Brasil.</b></p></section></div>'}
-function policy(){app.innerHTML='<div class="container"><section class="policy"><h1>Políticas da loja</h1><h2>Envio</h2><p>Os prazos e valores de frete devem ser confirmados conforme o endereço do cliente e a modalidade escolhida.</p><h2>Trocas</h2><p>Defina aqui sua política oficial de troca e devolução antes da publicação da loja.</p><h2>Pagamento</h2><p>O site está preparado para Pix, cartão e atendimento por WhatsApp. A cobrança automática deve ser integrada a um gateway de pagamento seguro.</p></section></div>'}
-function router(){const p=path();if(p==='home')home();else if(p==='catalogo')catalog();else if(p.startsWith('produto/'))product(p.split('/')[1]);else if(p==='checkout')checkout();else if(p==='sobre')about();else if(p==='politica')policy();else home();nav();renderCart();updateCartCount()}
-document.getElementById('openCart').onclick=openCart;
-document.getElementById('closeCart').onclick=closeCart;
-document.getElementById('continueBtn').onclick=closeCart;
-document.getElementById('checkoutBtn').onclick=()=>{closeCart();location.hash='checkout'};
-document.getElementById('year').textContent=new Date().getFullYear();
-document.getElementById('instagramLink').href=C.instagram||'#';
-document.getElementById('whatsappLink').href=C.whatsappNumber?'https://wa.me/'+C.whatsappNumber:'#';
-window.addEventListener('hashchange',router);
-router();
-}
+const P=window.PRODUCTS||[],C=window.AMORA_CONFIG||{};let cart=JSON.parse(localStorage.getItem('amora_cart')||'[]'),sel={},state={cat:'Todos',q:''};
+const money=v=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(v),px=v=>v*(1-(C.pixDiscount||0)),esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])),prod=id=>P.find(p=>p.id===id);
+function save(){localStorage.setItem('amora_cart',JSON.stringify(cart));count()}function count(){document.getElementById('cartCount').textContent=cart.reduce((a,x)=>a+x.qty,0)}
+function card(p){return `<article class="card"><a class="cardImg" href="#produto/${encodeURIComponent(p.id)}" data-route>${p.badge?`<span class="badge">${esc(p.badge)}</span>`:''}<img src="${esc(p.images[0]||'')}" alt="${esc(p.name)}"></a><div class="cardBody"><div class="meta">${esc(p.category)} • ${esc(p.version)}</div><h3>${esc(p.name)}</h3><div class="price">${money(p.price)}</div><div class="pix">Pix: ${money(px(p.price))}</div></div></article>`}
+function home(){let a=P.slice(0,4),l=P.filter(p=>(p.badge||'').toUpperCase().includes('LANÇ')).slice(0,4);app.innerHTML=`<div class="container"><section class="heroV4"><div class="heroContent"><div class="eyebrow">AMORA FUT STREETWEAR</div><h1>Seu time.<br><span>Seu estilo.</span></h1><p>Camisas de futebol para quem transforma paixão em identidade. Seleção de modelos, visual premium e envio para todo o Brasil.</p><div class="heroActions"><a class="primary" href="#catalogo" data-route>VER CATÁLOGO</a><a class="heroLink" href="#ofertas" data-route>VER OFERTAS →</a></div><div class="trustRow"><span>✓ Envio nacional</span><span>✓ 5% OFF no Pix</span><span>✓ Compra segura</span></div></div><div class="heroProduct">${P[0]?`<a href="#produto/${encodeURIComponent(P[0].id)}" data-route><img src="${esc(P[0].images[0]||'')}" alt="${esc(P[0].name)}"></a>`:'<div class="imagePlaceholder">Adicione a foto principal do produto</div>'}</div></section>
+<section><div class="sectionHeading"><div><div class="eyebrow dark">EXPLORE</div><h2>Encontre seu estilo</h2></div></div><div class="quickGrid">${[['Brasileiras','Brasileiras','⚽'],['Internacionais','Internacionais','🌎'],['Seleções','Seleções','🏆'],['Versão Jogador','Jogador','👕'],['Versão Torcedor','Torcedor','🔥'],['Ofertas','Ofertas','%']].map(x=>`<a href="#catalogo?cat=${encodeURIComponent(x[1])}" data-route class="quickCard"><span>${x[2]}</span><b>${x[0]}</b><small>Ver coleção</small></a>`).join('')}</div></section>
+<section><div class="sectionHeading"><div><div class="eyebrow dark">CURADORIA AMORA</div><h2>Mais vendidos</h2><p>Os modelos em destaque na vitrine.</p></div><a class="secondary" href="#catalogo" data-route>Ver catálogo</a></div><div class="grid">${a.length?a.map(card).join(''):'<div class="empty wide">Cadastre produtos em js/products.js.</div>'}</div></section>
+<section id="ofertas" class="offerBanner"><div><div class="eyebrow">OFERTA PROGRESSIVA</div><h2>Quanto mais camisas,<br>maior o desconto.</h2><p>Combine modelos da loja e aproveite.</p></div><div class="offerGrid"><div><b>2 CAMISAS</b><strong>R$ 10 OFF</strong><span>em cada</span></div><div><b>3 CAMISAS</b><strong>R$ 15 OFF</strong><span>em cada</span></div></div></section>
+<section id="lancamentos"><div class="sectionHeading"><div><div class="eyebrow dark">NOVIDADES</div><h2>Lançamentos</h2><p>Novidades que acabam de chegar.</p></div><a class="secondary" href="#catalogo" data-route>Ver tudo</a></div><div class="grid">${(l.length?l:a).map(card).join('')}</div></section>
+<section class="benefitSection">${[['🚚','Envio para todo o Brasil','Receba sua camisa onde estiver.'],['💳','Pagamento facilitado','Pix com 5% de desconto.'],['⚡','Atendimento online','Fale com a Amora Fut.'],['🛍','Compra direta','Escolha, adicione ao carrinho e finalize.']].map(x=>`<div class="benefitBig"><span>${x[0]}</span><b>${x[1]}</b><p>${x[2]}</p></div>`).join('')}</section>
+<section class="instagramBlock"><div class="eyebrow dark">SIGA A AMORA FUT</div><h2>@amorafutcamisas</h2><p>Novos modelos, lançamentos e ofertas.</p><a class="primary" href="${esc(C.instagram||'#')}" target="_blank">ABRIR INSTAGRAM</a></section>
+<section id="sobre" class="about"><div class="eyebrow dark">SOBRE A MARCA</div><h1>AMORA FUT</h1><p>A Amora Fut Streetwear une cultura do futebol e estética premium em uma experiência de compra visual, simples e direta. Trabalhamos com camisas selecionadas e enviamos para todo o Brasil.</p></section></div>`;scrollTo(0,0)}
+function catalog(){let cats=['Todos',...new Set(P.map(p=>p.category).filter(Boolean))],l=P.filter(p=>state.cat==='Todos'||p.category===state.cat).filter(p=>`${p.name} ${p.category} ${p.subcategory} ${p.version}`.toLowerCase().includes(state.q.toLowerCase()));app.innerHTML=`<div class="container"><div class="pageHead"><div class="eyebrow dark">COLEÇÃO</div><h1>Catálogo</h1><p>Encontre sua próxima camisa.</p></div><div class="catalogTools"><div class="filters">${cats.map(c=>`<button class="filter ${state.cat===c?'active':''}" data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div><input class="search" id="catalogSearch" value="${esc(state.q)}" placeholder="Buscar..."></div><div class="grid">${l.length?l.map(card).join(''):'<div class="empty wide">Nenhum produto encontrado.</div>'}</div></div>`;document.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{state.cat=b.dataset.cat;catalog()});document.getElementById('catalogSearch').oninput=e=>{state.q=e.target.value;catalog()};scrollTo(0,0)}
+function productPage(id){let p=prod(id);if(!p)return location.hash='catalogo';sel[id]=sel[id]||p.sizes[0];app.innerHTML=`<div class="container"><div class="breadcrumb"><a href="#catalogo" data-route>Catálogo</a> / ${esc(p.name)}</div><section class="product"><div class="gallery"><div class="thumbs">${p.images.map((im,i)=>`<button class="thumb ${i?'':'active'}" data-img="${esc(im)}"><img src="${esc(im)}" alt=""></button>`).join('')}</div><div class="mainImg"><img id="mainProductImage" src="${esc(p.images[0])}" alt="${esc(p.name)}"></div></div><div class="details">${p.badge?`<span class="tag">${esc(p.badge)}</span>`:''}<div class="meta topMeta">${esc(p.category)} • ${esc(p.version)}</div><h1>${esc(p.name)}</h1><p class="subtitle">${esc(p.description)}</p><div class="bigPrice">${money(p.price)}</div><div class="pixPrice">5% OFF no Pix: ${money(px(p.price))}</div><div class="divider"></div><div class="label">Tamanho</div><div class="sizes">${p.sizes.map(s=>`<button class="size ${sel[id]===s?'active':''}" data-size="${s}">${s}</button>`).join('')}</div><div class="buyRow"><input class="qty" id="qty" type="number" min="1" value="1"><button class="primary" id="buyBtn">ADICIONAR AO CARRINHO</button></div><div class="benefits"><div class="benefit"><b>Envio nacional</b><br>Todo o Brasil.</div><div class="benefit"><b>Pix com desconto</b><br>5% OFF à vista.</div></div></div></section><section class="detailSections"><div class="panel"><h2>Detalhes</h2>${p.specs.map(s=>`<div class="spec"><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div>`).join('')}</div><div class="panel"><h2>Compra e envio</h2><p class="notice">Selecione o tamanho, informe a quantidade e adicione ao carrinho. O pedido pode ser encaminhado pelo WhatsApp.</p></div></section></div>`;document.querySelectorAll('[data-img]').forEach(b=>b.onclick=()=>{mainProductImage.src=b.dataset.img;document.querySelectorAll('.thumb').forEach(x=>x.classList.remove('active'));b.classList.add('active')});document.querySelectorAll('[data-size]').forEach(b=>b.onclick=()=>{sel[id]=b.dataset.size;productPage(id)});buyBtn.onclick=()=>add(id,sel[id],Math.max(1,+qty.value||1));scrollTo(0,0)}
+function add(id,size,qty){let key=id+'|'+size,x=cart.find(i=>i.key===key);x?x.qty+=qty:cart.push({key,id,size,qty});save();openCart();renderCart()}
+function renderCart(){let e=document.getElementById('cartItems'),empty=document.getElementById('cartEmpty');if(!e)return;if(!cart.length){e.innerHTML='';empty.style.display='block'}else{empty.style.display='none';e.innerHTML=cart.map((x,i)=>{let p=prod(x.id);return `<div class="cartItem"><img src="${esc(p.images[0])}"><div><h4>${esc(p.name)}</h4><p>Tamanho: ${x.size} • Qtd: ${x.qty}</p><b>${money(p.price*x.qty)}</b></div><button class="remove" data-remove="${i}">remover</button></div>`}).join('')}let s=cart.reduce((a,x)=>a+prod(x.id).price*x.qty,0);subtotal.textContent=money(s);pixTotal.textContent=money(px(s));document.querySelectorAll('[data-remove]').forEach(b=>b.onclick=()=>{cart.splice(+b.dataset.remove,1);save();renderCart()})}
+function openCart(){cartDrawer.classList.add('open');renderCart()}function closeCart(){cartDrawer.classList.remove('open')}
+function checkout(){if(!cart.length)return openCart();app.innerHTML=`<div class="container checkout"><div class="pageHead"><div class="eyebrow dark">FINALIZAÇÃO</div><h1>Checkout</h1><p>Preencha seus dados para preparar o pedido.</p></div><div class="checkoutGrid"><form class="formPanel" id="checkoutForm"><div class="field"><label>Nome completo</label><input name="name" required></div><div class="two"><div class="field"><label>WhatsApp</label><input name="phone" required></div><div class="field"><label>CEP</label><input name="cep" required></div></div><div class="two"><div class="field"><label>Cidade</label><input name="city" required></div><div class="field"><label>UF</label><input name="uf" maxlength="2" required></div></div><div class="field"><label>Endereço</label><input name="address" required></div><div class="field"><label>Observação</label><input name="note"></div><button class="primary full">GERAR PEDIDO</button></form><div class="summaryPanel"><h2>Resumo</h2>${cart.map(x=>{let p=prod(x.id);return `<div class="summaryItem"><span>${esc(p.name)} — ${x.size} × ${x.qty}</span><b>${money(p.price*x.qty)}</b></div>`}).join('')}<div class="summaryTotal"><span>Total</span><b>${money(cart.reduce((a,x)=>a+prod(x.id).price*x.qty,0))}</b></div><div class="payment">Pix: 5% de desconto.</div></div></div></div>`;checkoutForm.onsubmit=e=>{e.preventDefault();finish(new FormData(e.target))};scrollTo(0,0)}
+function finish(f){let s=cart.reduce((a,x)=>a+prod(x.id).price*x.qty,0),lines=cart.map(x=>{let p=prod(x.id);return `• ${p.name} | ${x.size} | ${x.qty}x | ${money(p.price*x.qty)}`}).join('\n'),n=(C.whatsappNumber||'').replace(/\D/g,'');if(!n)return alert('Configure o whatsappNumber em js/config.js');window.open(`https://wa.me/${n}?text=${encodeURIComponent(`Olá, Amora Fut! Quero fazer um pedido:\n\n${lines}\n\nTotal: ${money(s)}\nPix com 5% OFF: ${money(px(s))}\n\nCliente: ${f.get('name')}\nWhatsApp: ${f.get('phone')}\nCEP: ${f.get('cep')}\nEndereço: ${f.get('address')}, ${f.get('city')}/${f.get('uf')}`)}`,'_blank')}
+function about(){app.innerHTML='<div class="container"><section class="about pageAbout"><div class="eyebrow dark">A MARCA</div><h1>AMORA FUT</h1><p>A Amora Fut Streetwear une cultura do futebol e estética premium em uma experiência de compra simples, visual e direta.</p></section></div>'}
+function policy(){app.innerHTML='<div class="container policy"><div class="eyebrow dark">INFORMAÇÕES</div><h1>Políticas</h1><h2>Pedidos</h2><p>Pedidos, estoque, tamanhos, frete e prazos devem ser confirmados no atendimento.</p><h2>Pagamento</h2><p>O site apresenta Pix com desconto. A confirmação do pagamento ocorre no atendimento.</p><h2>Trocas e devoluções</h2><p>Consulte as condições comerciais da loja antes da compra.</p></div>'}
+function route(){let [p,q='']=location.hash.slice(1).split('?'),u=new URLSearchParams(q);p=p||'home';if(p==='home')home();else if(p==='catalogo'){state.cat=u.get('cat')||'Todos';catalog()}else if(p.startsWith('produto/'))productPage(decodeURIComponent(p.split('/')[1]));else if(p==='checkout')checkout();else if(p==='sobre')about();else if(p==='politica')policy();else home()}
+document.addEventListener('click',e=>{let a=e.target.closest('[data-route]');if(a){e.preventDefault();location.hash=a.getAttribute('href').slice(1)}});openCart.onclick=openCart;closeCart.onclick=closeCart;continueBtn.onclick=closeCart;checkoutBtn.onclick=()=>{closeCart();location.hash='checkout'};openSearch.onclick=()=>{searchBar.classList.add('open');globalSearch.focus()};closeSearch.onclick=()=>searchBar.classList.remove('open');globalSearch.onkeydown=e=>{if(e.key==='Enter'){state.q=e.target.value;searchBar.classList.remove('open');location.hash='catalogo'}};instagramLink.href=C.instagram||'#';whatsappLink.href=C.whatsappNumber?'https://wa.me/'+C.whatsappNumber.replace(/\D/g,''):'#';year.textContent=new Date().getFullYear();addEventListener('hashchange',route);count();route();
