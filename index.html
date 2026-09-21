@@ -2,80 +2,72 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Amora Fut Streetwear | Camisas de Futebol</title>
 <meta name="description" content="Amora Fut Streetwear — camisas de futebol e streetwear. Enviamos para todo o Brasil.">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/premium-product.css">
-</head><link rel="stylesheet" href="css/premium-product.css">
+</head>
+
 <body>
-<div class="announcement">ENVIO PARA TODO O BRASIL <span>•</span> PIX COM 5% DE DESCONTO <span>•</span> ATENDIMENTO ONLINE</div>
-<header class="header">
-  <a class="logo" href="#home" data-route>AMORA <strong>FUT</strong><small>STREETWEAR • DESIGNER PREMIUM</small></a>
-  <nav class="mainNav">
-    <a href="#home" data-route>Início</a>
-    <a href="#catalogo" data-route>Catálogo</a>
-    <a href="#lancamentos" data-route>Lançamentos</a>
-    <a href="#ofertas" data-route>Ofertas</a>
-    <a href="#sobre" data-route>Sobre</a>
-  </nav>
-  <div class="headerActions">
-    <button class="iconBtn" id="openSearch" aria-label="Buscar">⌕</button>
-    <button class="cartBtn" id="openCart">Carrinho <span id="cartCount">0</span></button>
+<header class="siteHeader">
+  <div class="headerInner">
+    <a class="brand" href="#inicio" aria-label="Amora Fut Streetwear">
+      <span class="brandMark">AMORA</span>
+      <span class="brandSub">FUT STREETWEAR</span>
+    </a>
+
+    <nav class="mainNav" aria-label="Navegação principal">
+      <a href="#inicio">Início</a>
+      <a href="#catalogo">Catálogo</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#politicas">Políticas</a>
+    </nav>
+
+    <div class="headerActions">
+      <button class="iconBtn" id="searchToggle" type="button" aria-label="Pesquisar">⌕</button>
+      <button class="iconBtn" id="cartToggle" type="button" aria-label="Carrinho">🛒<span id="cartCount">0</span></button>
+    </div>
+  </div>
+
+  <div class="searchBar" id="searchBar">
+    <input id="searchInput" type="search" placeholder="Buscar camisa, time ou seleção..." autocomplete="off">
   </div>
 </header>
 
-<div id="searchBar" class="searchBar">
-  <div class="searchInner">
-    <input id="globalSearch" placeholder="Buscar camisas, times..." aria-label="Buscar">
-    <button class="secondary" id="closeSearch">Fechar</button>
-  </div>
-</div>
-
 <main id="app"></main>
 
-<footer class="footer">
-  <div class="footerGrid">
+<aside class="cartDrawer" id="cartDrawer" aria-hidden="true">
+  <div class="cartDrawerHead">
+    <h2>Seu carrinho</h2>
+    <button id="cartClose" type="button" aria-label="Fechar">×</button>
+  </div>
+  <div id="cartItems"></div>
+  <div class="cartFooter">
+    <div class="cartTotalRow">
+      <span>Total</span>
+      <strong id="cartTotal">R$ 0,00</strong>
+    </div>
+    <button id="checkoutBtn" class="primaryBtn" type="button">Finalizar pedido</button>
+  </div>
+</aside>
+
+<div class="drawerOverlay" id="drawerOverlay"></div>
+
+<footer class="siteFooter">
+  <div class="footerInner">
     <div>
-      <div class="logo light">AMORA <strong>FUT</strong><small>STREETWEAR • DESIGNER PREMIUM</small></div>
-      <p>Camisas de futebol, estilo e identidade.</p>
+      <strong>Amora Fut Streetwear</strong>
+      <p>Camisas de futebol e streetwear. Enviamos para todo o Brasil.</p>
     </div>
     <div>
-      <b>Atendimento</b>
-      <a href="#catalogo" data-route>Catálogo</a>
-      <a id="instagramLink" target="_blank">Instagram</a>
-      <a id="whatsappLink" target="_blank">WhatsApp</a>
-    </div>
-    <div>
-      <b>Informações</b>
-      <a href="#sobre" data-route>Sobre a Amora Fut</a>
-      <a href="#politica" data-route>Políticas</a>
+      <a href="https://instagram.com/amorafutcamisas" target="_blank" rel="noopener">Instagram</a>
     </div>
   </div>
-  <div class="copy">© <span id="year"></span> Amora Fut Streetwear. Todos os direitos reservados.</div>
 </footer>
 
-<div id="cartDrawer" class="overlay">
-  <aside class="drawer">
-    <button class="x" id="closeCart">×</button>
-    <h2>Seu carrinho</h2>
-    <div id="cartItems"></div>
-    <div id="cartEmpty" class="empty">Seu carrinho está vazio.</div>
-    <div class="cartTotals">
-      <div><span>Subtotal</span><b id="subtotal">R$ 0,00</b></div>
-      <div class="pixRow"><span>À vista no Pix</span><b id="pixTotal">R$ 0,00</b></div>
-    </div>
-    <button class="primary full" id="checkoutBtn">IR PARA O CHECKOUT</button>
-    <button class="secondary full" id="continueBtn">CONTINUAR COMPRANDO</button>
-  </aside>
-</div>
-
-<div id="imageZoom" class="premiumZoom" aria-hidden="true">
-  <button id="zoomClose" class="zoomClose">×</button>
-  <img id="zoomImage" alt="">
-</div>
-
 <script src="js/config.js"></script>
+<script src="js/products.js"></script>
 <script src="js/app.js"></script>
 <script src="js/premium-product.js"></script>
 </body>
