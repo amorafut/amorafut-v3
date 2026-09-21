@@ -1,18 +1,19 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Amora Fut Streetwear | Camisas de Futebol</title>
 <meta name="description" content="Amora Fut Streetwear — camisas de futebol e streetwear. Enviamos para todo o Brasil.">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<div class="announcement">ENVIO PARA TODO O BRASIL <span>•</span> PIX COM 5% DE DESCONTO <span>•</span> ATENDIMENTO ONLINE</div>
+<div class="announcement">ENVIO PARA TODO O BRASIL <i>•</i> 5% DE DESCONTO NO PIX <i>•</i> ATENDIMENTO ONLINE</div>
 <header class="header">
-  <a class="logo" href="#home" data-route>AMORA <strong>FUT</strong><small>STREETWEAR • DESIGNER PREMIUM</small></a>
-  <nav><a href="#home" data-route>Início</a><a href="#catalogo" data-route>Catálogo</a><a href="#sobre" data-route>Sobre</a></nav>
-  <button class="cartBtn" id="openCart">Carrinho <span id="cartCount">0</span></button>
+<a class="logo" href="#home" data-route>AMORA <strong>FUT</strong><small>STREETWEAR • DESIGNER PREMIUM</small></a>
+<nav class="mainNav"><a href="#home" data-route>Início</a><a href="#catalogo" data-route>Catálogo</a><a href="#lancamentos" data-route>Lançamentos</a><a href="#ofertas" data-route>Ofertas</a><a href="#sobre" data-route>Sobre</a></nav>
+<div class="headerActions"><button class="iconBtn" id="openSearch">⌕</button><button class="cartBtn" id="openCart">Carrinho <span id="cartCount">0</span></button></div>
 </header>
+<div id="searchBar" class="searchBar"><div class="searchInner"><input id="globalSearch" type="search" placeholder="Buscar camisa, time ou coleção..."><button id="closeSearch" class="iconBtn">×</button></div></div>
 <main id="app"></main>
 <footer class="footer"><div class="footerGrid"><div><div class="logo light">AMORA <strong>FUT</strong><small>STREETWEAR • DESIGNER PREMIUM</small></div><p>Camisas de futebol, estilo e identidade.</p></div><div><b>Atendimento</b><a href="#catalogo" data-route>Catálogo</a><a id="instagramLink" target="_blank">Instagram</a><a id="whatsappLink" target="_blank">WhatsApp</a></div><div><b>Informações</b><a href="#sobre" data-route>Sobre a Amora Fut</a><a href="#politica" data-route>Políticas</a></div></div><div class="copy">© <span id="year"></span> Amora Fut Streetwear. Todos os direitos reservados.</div></footer>
 <div id="cartDrawer" class="overlay"><aside class="drawer"><button class="x" id="closeCart">×</button><h2>Seu carrinho</h2><div id="cartItems"></div><div id="cartEmpty" class="empty">Seu carrinho está vazio.</div><div class="cartTotals"><div><span>Subtotal</span><b id="subtotal">R$ 0,00</b></div><div class="pixRow"><span>À vista no Pix</span><b id="pixTotal">R$ 0,00</b></div></div><button class="primary full" id="checkoutBtn">IR PARA O CHECKOUT</button><button class="secondary full" id="continueBtn">CONTINUAR COMPRANDO</button></aside></div>
